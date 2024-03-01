@@ -10,7 +10,7 @@ import { TGet } from '@/types/api';
 import { TUser } from '@/types/identity/user';
 import { TAccessToken } from '@/types/identity';
 
-const apiUrl: string | undefined = process.env.REACT_APP_API_URL;
+const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 export const signIn = createAsyncThunk('apiAuth/signIn', async (args: TSignIn, { rejectWithValue }) => {
   try {

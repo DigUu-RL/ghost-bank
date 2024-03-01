@@ -12,6 +12,9 @@ import './globals.css';
 // ** CONTEXTS
 import AppProvider from '@/contexts';
 
+// ** OTHERS
+import { Toaster } from 'react-hot-toast';
+
 const inter: NextFont = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -27,6 +30,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang='pt-br'>
       <body className={inter.className}>
+        <Toaster />
         <AppProvider>{children}</AppProvider>
       </body>
     </html>

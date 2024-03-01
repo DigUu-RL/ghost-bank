@@ -16,7 +16,7 @@ import {
 
 // ** REACT
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 
 // ** CONTEXTS
@@ -41,6 +41,7 @@ const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // * states
+  const [loading, setLoading] = useState<boolean>(false);
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [user, setUser] = useState<TUser | undefined>(undefined);
@@ -48,13 +49,19 @@ const Login = () => {
 
   // * handles
   const handleLogin = () => {
+    setLoading(true);
+
     if (login === '') {
       toast.error('É obrigatório informar o login');
+      setLoading(false);
+
       return;
     }
 
     if (password === '') {
       toast.error('É obrigatório informar a senha');
+      setLoading(false);
+
       return;
     }
 
@@ -66,11 +73,17 @@ const Login = () => {
     )
       .unwrap()
       .then(response => setAccessToken(response))
-      .catch(error => toast.error(`Ocorreu um erro ao se autenticar: ${error}`));
+      .catch(error => {
+        toast.error(`Ocorreu um erro ao se autenticar: ${error}`);
+      });
+
+    setLoading(false);
   };
 
   useEffect(() => {
     if (accessToken) {
+      setLoading(true);
+
       dispatch(
         me({
           accessToken: accessToken.token!
@@ -78,7 +91,7 @@ const Login = () => {
       )
         .unwrap()
         .then(response => setUser(response))
-        .catch(error => toast.error(`Ocorreu um erro ao se autenticar: ${error}`));
+        .catch(error => toast.error(`Ocorreu um erro ao se autenticar: ${error.message}`));
 
       if (!accessToken || !user) {
         toast.error('Token ou usuário não definidos');
@@ -86,6 +99,8 @@ const Login = () => {
 
       authContext.setAccessToken!(accessToken);
       authContext.setUser!(user);
+
+      setLoading(false);
     }
   }, [accessToken]);
 
@@ -131,8 +146,8 @@ const Login = () => {
         <Divider />
 
         <CardActions>
-          <Button variant='contained' onClick={handleLogin} fullWidth>
-            Autenticar
+          <Button variant='contained' onClick={handleLogin} disabled={loading} fullWidth>
+            {!loading ? 'Autenticar' : 'Aguarde...'}
           </Button>
         </CardActions>
       </Card>
