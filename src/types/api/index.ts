@@ -18,7 +18,7 @@ export type TDelete = {
   accessToken: string;
 };
 
-export type TErrorResponse = {
+export type TError = {
   statusCode: number;
   error: string;
   message: string;

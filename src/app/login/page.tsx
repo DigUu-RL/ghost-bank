@@ -11,13 +11,15 @@ import {
   Divider,
   Grid,
   TextField,
-  Typography
+  Theme,
+  Typography,
+  useTheme
 } from '@mui/material';
 
 // ** REACT
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 
 // ** CONTEXTS
 import { AuthContext } from '@/contexts/auth/AuthContext';
@@ -39,6 +41,7 @@ const Login = () => {
 
   // * hooks
   const dispatch = useDispatch<AppDispatch>();
+  const theme: Theme = useTheme();
 
   // * states
   const [loading, setLoading] = useState<boolean>(false);
@@ -95,6 +98,7 @@ const Login = () => {
 
       if (!accessToken || !user) {
         toast.error('Token ou usuário não definidos');
+        return;
       }
 
       authContext.setAccessToken!(accessToken);
@@ -145,8 +149,12 @@ const Login = () => {
 
         <Divider />
 
-        <CardActions>
-          <Button variant='contained' onClick={handleLogin} disabled={loading} fullWidth>
+        <CardActions sx={{ display: 'flex' }}>
+          <Button fullWidth variant='outlined' color='primary' size='large' LinkComponent='a' href='sign-up'>
+            Criar nova conta
+          </Button>
+
+          <Button fullWidth variant='outlined' color='secondary' size='large' onClick={handleLogin} disabled={loading}>
             {!loading ? 'Autenticar' : 'Aguarde...'}
           </Button>
         </CardActions>
