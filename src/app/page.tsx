@@ -10,13 +10,19 @@ import { useAuth } from '@/hooks/auth/useAuth';
 // ** TYPES
 import { TAuth } from '@/types/contexts/auth';
 
+// ** PAGES
+import Home from './home/page';
+
 const Index = () => {
   const router: AppRouterInstance = useRouter();
   const { user }: TAuth = useAuth();
 
-  const url = user ? '/home' : '/login';
+  if (!user) {
+    router.push('/login');
+    return;
+  }
 
-  router.push(url);
+  return <Home />;
 };
 
 export default Index;

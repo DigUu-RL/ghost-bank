@@ -11,15 +11,17 @@ import {
   Divider,
   Grid,
   TextField,
-  Theme,
-  Typography,
-  useTheme
+  Typography
 } from '@mui/material';
 
 // ** REACT
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
+
+// ** NEXT
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useRouter } from 'next/navigation';
 
 // ** CONTEXTS
 import { AuthContext } from '@/contexts/auth/AuthContext';
@@ -34,6 +36,7 @@ import PasswordInput from '@/components/PasswordInput';
 
 // ** STORES
 import { me, signIn } from '@/store/api/auth';
+import { TError } from '@/types/api';
 
 const Login = () => {
   // * contexts
@@ -41,7 +44,7 @@ const Login = () => {
 
   // * hooks
   const dispatch = useDispatch<AppDispatch>();
-  const theme: Theme = useTheme();
+  const router: AppRouterInstance = useRouter();
 
   // * states
   const [loading, setLoading] = useState<boolean>(false);
@@ -94,19 +97,27 @@ const Login = () => {
       )
         .unwrap()
         .then(response => setUser(response))
-        .catch(error => toast.error(`Ocorreu um erro ao se autenticar: ${error.message}`));
-
-      if (!accessToken || !user) {
-        toast.error('Token ou usuário não definidos');
-        return;
-      }
-
-      authContext.setAccessToken!(accessToken);
-      authContext.setUser!(user);
+        .catch(error => toast.error(`Ocorreu um erro ao se autenticar: ${error}`));
 
       setLoading(false);
     }
   }, [accessToken]);
+
+  useEffect(() => {
+    setLoading(true);
+
+    if (!accessToken || !user) {
+      setLoading(false);
+      return;
+    }
+
+    authContext.setAccessToken!(accessToken);
+    authContext.setUser!(user);
+
+    setLoading(false);
+
+    router.push('/home');
+  }, [user]);
 
   return (
     <Grid container>
@@ -140,7 +151,7 @@ const Login = () => {
               <PasswordInput
                 label='Senha'
                 placeholder='Digite sua senha'
-                onChange={event => setPassword(event.target.value)}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
                 fullWidth
               />
             </Grid>
@@ -149,11 +160,7 @@ const Login = () => {
 
         <Divider />
 
-        <CardActions sx={{ display: 'flex' }}>
-          <Button fullWidth variant='outlined' color='primary' size='large' LinkComponent='a' href='sign-up'>
-            Criar nova conta
-          </Button>
-
+        <CardActions>
           <Button fullWidth variant='outlined' color='secondary' size='large' onClick={handleLogin} disabled={loading}>
             {!loading ? 'Autenticar' : 'Aguarde...'}
           </Button>

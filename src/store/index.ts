@@ -1,18 +1,23 @@
 // ** REACT
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
 // ** STORES
-import auth from "./api/auth";
+import auth from './api/auth';
+
+// ** INTEGRATION STORES
+import viacep from './integration/viacep';
 
 export const store = configureStore({
-	reducer: {
-		auth,
-	},
-	middleware: (getDefaultMiddleware) => {
-		return getDefaultMiddleware({
-			serializableCheck: false,
-		});
-	},
+  reducer: {
+    auth,
+    // integration
+    viacep
+  },
+  middleware: getDefaultMiddleware => {
+    return getDefaultMiddleware({
+      serializableCheck: false
+    });
+  }
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -7,8 +7,8 @@ import { ChangeEvent, useState } from 'react';
 
 interface PasswordInputProps {
   label: string;
-  placeholder: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
   fullWidth?: boolean;
   required?: boolean;
 }

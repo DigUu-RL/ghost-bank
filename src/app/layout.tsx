@@ -1,5 +1,8 @@
+// ** MATERIAL UI
+import { Grid } from '@mui/material';
+
 // ** NEXT
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 import { NextFont } from 'next/dist/compiled/@next/font';
 
 // ** REACT
@@ -30,8 +33,10 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang='pt-br'>
       <body className={inter.className}>
-        <Toaster />
-        <AppProvider>{children}</AppProvider>
+        <Grid container padding={2}>
+          <Toaster />
+          <AppProvider>{children}</AppProvider>
+        </Grid>
       </body>
     </html>
   );

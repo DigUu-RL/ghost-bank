@@ -18,7 +18,7 @@ export const signIn = createAsyncThunk('apiAuth/signIn', async (args: TSignIn, {
     const response: AxiosResponse<TAccessToken, any> = await axios.post(url, args);
 
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     return rejectWithValue(error);
   }
 });
