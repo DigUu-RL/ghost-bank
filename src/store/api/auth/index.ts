@@ -1,5 +1,5 @@
 // ** REACT
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { AsyncThunk, AsyncThunkOptions, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // ** AXIOS
 import axios, { AxiosResponse } from 'axios';

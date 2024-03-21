@@ -4,9 +4,9 @@ import { useAuth } from '@/hooks/auth/useAuth';
 import { TAuth } from '@/types/contexts/auth';
 
 const Home = () => {
-  const auth: TAuth = useAuth();
+  const { user }: TAuth = useAuth();
 
-  return <>Home</>;
+  return <>{}</>;
 };
 
 export default Home;

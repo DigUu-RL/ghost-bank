@@ -1,46 +1,35 @@
 // ** MATERIAL UI
-import {
-	FormControl,
-	InputLabel,
-	OutlinedInput,
-	InputAdornment,
-	IconButton,
-} from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput, InputAdornment } from '@mui/material';
 
 // ** REACT
-import { ChangeEvent, ReactNode } from "react";
+import { ChangeEvent, MutableRefObject, ReactNode } from 'react';
 
 interface IconInputProps {
-	label: string;
-	placeholder: string;
-	type: string;
-	icon: ReactNode;
-	onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-	fullWidth?: boolean;
+  fullWidth?: boolean;
+  label: string;
+  placeholder: string;
+  type: string;
+  icon: ReactNode;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  inputRef?: MutableRefObject<HTMLInputElement | undefined>;
 }
 
-const IconInput = ({
-	label,
-	placeholder,
-	type,
-	icon,
-	onChange,
-	fullWidth,
-}: IconInputProps) => {
-	return (
-		<FormControl fullWidth={fullWidth}>
-			<InputLabel>{label}</InputLabel>
+const IconInput = ({ fullWidth, label, placeholder, type, icon, onChange, inputRef }: IconInputProps): JSX.Element => {
+  return (
+    <FormControl fullWidth={fullWidth}>
+      <InputLabel>{label}</InputLabel>
 
-			<OutlinedInput
-				label={label}
-				placeholder={placeholder}
-				type={type}
-				fullWidth
-				onChange={onChange}
-				endAdornment={<InputAdornment position="end">{icon}</InputAdornment>}
-			/>
-		</FormControl>
-	);
+      <OutlinedInput
+        fullWidth
+        label={label}
+        placeholder={placeholder}
+        type={type}
+        onChange={onChange}
+        inputRef={inputRef}
+        endAdornment={<InputAdornment position='end'>{icon}</InputAdornment>}
+      />
+    </FormControl>
+  );
 };
 
 export default IconInput;

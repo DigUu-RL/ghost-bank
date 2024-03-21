@@ -1,8 +1,9 @@
+'use client';
+
 // ** MATERIAL UI
-import { Grid } from '@mui/material';
+import { Grid, Theme, ThemeProvider, createTheme } from '@mui/material';
 
 // ** NEXT
-import { Metadata } from 'next';
 import { NextFont } from 'next/dist/compiled/@next/font';
 
 // ** REACT
@@ -20,23 +21,26 @@ import { Toaster } from 'react-hot-toast';
 
 const inter: NextFont = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'Ghost Bank',
-  description: 'O banco que faz tudo por você'
-};
-
 interface RootLayoutProps {
   children: ReactNode;
 }
 
 const RootLayout = ({ children }: RootLayoutProps) => {
+  const theme: Theme = createTheme({
+    palette: {
+      mode: 'dark'
+    }
+  });
+
   return (
     <html lang='pt-br'>
       <body className={inter.className}>
-        <Grid container padding={2}>
-          <Toaster />
-          <AppProvider>{children}</AppProvider>
-        </Grid>
+        <ThemeProvider theme={theme}>
+          <Grid container padding={2}>
+            <Toaster position='bottom-left' />
+            <AppProvider>{children}</AppProvider>
+          </Grid>
+        </ThemeProvider>
       </body>
     </html>
   );

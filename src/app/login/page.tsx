@@ -2,12 +2,14 @@
 
 // ** MATERIAL UI
 import {
+  Backdrop,
   Box,
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
+  CircularProgress,
   Divider,
   Grid,
   TextField,
@@ -15,7 +17,7 @@ import {
 } from '@mui/material';
 
 // ** REACT
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 
@@ -36,7 +38,6 @@ import PasswordInput from '@/components/PasswordInput';
 
 // ** STORES
 import { me, signIn } from '@/store/api/auth';
-import { TError } from '@/types/api';
 
 const Login = () => {
   // * contexts
@@ -44,27 +45,29 @@ const Login = () => {
 
   // * hooks
   const dispatch = useDispatch<AppDispatch>();
-  const router: AppRouterInstance = useRouter();
+  const { push }: AppRouterInstance = useRouter();
 
   // * states
   const [loading, setLoading] = useState<boolean>(false);
-  const [login, setLogin] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
   const [user, setUser] = useState<TUser | undefined>(undefined);
   const [accessToken, setAccessToken] = useState<TAccessToken | undefined>(undefined);
 
+  // * refs
+  const loginRef: MutableRefObject<HTMLInputElement | undefined> = useRef<HTMLInputElement>();
+  const passwordRef: MutableRefObject<HTMLInputElement | undefined> = useRef<HTMLInputElement>();
+
   // * handles
-  const handleLogin = () => {
+  const handleLogin = (): void => {
     setLoading(true);
 
-    if (login === '') {
+    if (!loginRef.current!.value) {
       toast.error('É obrigatório informar o login');
       setLoading(false);
 
       return;
     }
 
-    if (password === '') {
+    if (!passwordRef.current!.value) {
       toast.error('É obrigatório informar a senha');
       setLoading(false);
 
@@ -73,17 +76,19 @@ const Login = () => {
 
     dispatch(
       signIn({
-        login,
-        password
+        login: loginRef.current!.value,
+        password: passwordRef.current!.value
       })
     )
       .unwrap()
-      .then(response => setAccessToken(response))
+      .then(response => {
+        setLoading(false);
+        setAccessToken(response);
+      })
       .catch(error => {
+        setLoading(false);
         toast.error(`Ocorreu um erro ao se autenticar: ${error}`);
       });
-
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -96,10 +101,14 @@ const Login = () => {
         })
       )
         .unwrap()
-        .then(response => setUser(response))
-        .catch(error => toast.error(`Ocorreu um erro ao se autenticar: ${error}`));
-
-      setLoading(false);
+        .then(response => {
+          setLoading(false);
+          setUser(response);
+        })
+        .catch(error => {
+          setLoading(false);
+          toast.error(`Ocorreu um erro ao se autenticar: ${error}`);
+        });
     }
   }, [accessToken]);
 
@@ -116,7 +125,7 @@ const Login = () => {
 
     setLoading(false);
 
-    router.push('/home');
+    push('/home');
   }, [user]);
 
   return (
@@ -138,22 +147,11 @@ const Login = () => {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
-              <TextField
-                label='Login'
-                placeholder='Digite seu login'
-                type='text'
-                fullWidth
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setLogin(event.target.value)}
-              />
+              <TextField fullWidth label='Login' placeholder='Digite seu login' type='text' inputRef={loginRef} />
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <PasswordInput
-                label='Senha'
-                placeholder='Digite sua senha'
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                fullWidth
-              />
+              <PasswordInput fullWidth label='Senha' placeholder='Digite sua senha' inputRef={passwordRef} />
             </Grid>
           </Grid>
         </CardContent>
@@ -161,11 +159,17 @@ const Login = () => {
         <Divider />
 
         <CardActions>
-          <Button fullWidth variant='outlined' color='secondary' size='large' onClick={handleLogin} disabled={loading}>
-            {!loading ? 'Autenticar' : 'Aguarde...'}
+          <Button fullWidth variant='outlined' color='secondary' size='large' onClick={handleLogin}>
+            Autenticar
           </Button>
         </CardActions>
       </Card>
+
+      {loading && (
+        <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={loading}>
+          <CircularProgress color='inherit' />
+        </Backdrop>
+      )}
     </Grid>
   );
 };

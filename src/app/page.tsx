@@ -14,11 +14,11 @@ import { TAuth } from '@/types/contexts/auth';
 import Home from './home/page';
 
 const Index = () => {
-  const router: AppRouterInstance = useRouter();
+  const { push }: AppRouterInstance = useRouter();
   const { user }: TAuth = useAuth();
 
   if (!user) {
-    router.push('/login');
+    push('/login');
     return;
   }
 

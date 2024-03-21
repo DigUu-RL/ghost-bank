@@ -3,17 +3,25 @@ import { FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton } fr
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 
 // ** REACT
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, MutableRefObject, useState } from 'react';
 
 interface PasswordInputProps {
-  label: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
   fullWidth?: boolean;
   required?: boolean;
+  label: string;
+  placeholder?: string;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  inputRef?: MutableRefObject<HTMLInputElement | undefined>;
 }
 
-const PasswordInput = ({ label, placeholder, onChange, fullWidth, required }: PasswordInputProps) => {
+const PasswordInput = ({
+  fullWidth,
+  required,
+  label,
+  placeholder,
+  onChange,
+  inputRef
+}: PasswordInputProps): JSX.Element => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
@@ -21,12 +29,13 @@ const PasswordInput = ({ label, placeholder, onChange, fullWidth, required }: Pa
       <InputLabel>{label}</InputLabel>
 
       <OutlinedInput
+        fullWidth
         label={label}
         placeholder={placeholder}
         type={showPassword ? 'text' : 'password'}
-        fullWidth
         required={required}
         onChange={onChange}
+        inputRef={inputRef}
         endAdornment={
           <InputAdornment position='end'>
             <IconButton onClick={() => setShowPassword(prev => !prev)} edge='end'>
