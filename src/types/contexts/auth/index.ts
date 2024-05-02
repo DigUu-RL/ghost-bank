@@ -1,15 +1,13 @@
 // ** TYPES
-import { SetStateAction } from 'react';
-
-// ** TYPES
+import { TSignIn } from '@/types/authentication';
 import { TAccessToken } from '@/types/identity';
 import { TUser } from '@/types/identity/user';
 
 export type TAuthContext = {
   user?: TUser;
-  setUser?: (value: SetStateAction<TUser | undefined>) => void;
   accessToken?: TAccessToken;
-  setAccessToken?: (value: SetStateAction<TAccessToken | undefined>) => void;
+  login: (signIn: TSignIn) => Promise<void>;
+  logout: () => void;
 };
 
 export type TAuth = {

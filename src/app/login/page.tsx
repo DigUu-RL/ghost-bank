@@ -17,40 +17,20 @@ import {
 } from '@mui/material';
 
 // ** REACT
-import { MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import toast from 'react-hot-toast';
-
-// ** NEXT
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { useRouter } from 'next/navigation';
+import { MutableRefObject, useContext, useRef, useState } from 'react';
 
 // ** CONTEXTS
 import { AuthContext } from '@/contexts/auth/AuthContext';
 
-// ** TYPES
-import { TUser } from '@/types/identity/user';
-import { TAccessToken } from '@/types/identity';
-import { AppDispatch } from '@/store';
-
 // ** COMPONENTS
 import PasswordInput from '@/components/PasswordInput';
-
-// ** STORES
-import { me, signIn } from '@/store/api/auth';
 
 const Login = () => {
   // * contexts
   const authContext = useContext(AuthContext);
 
-  // * hooks
-  const dispatch = useDispatch<AppDispatch>();
-  const { push }: AppRouterInstance = useRouter();
-
   // * states
   const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<TUser | undefined>(undefined);
-  const [accessToken, setAccessToken] = useState<TAccessToken | undefined>(undefined);
 
   // * refs
   const loginRef: MutableRefObject<HTMLInputElement | undefined> = useRef<HTMLInputElement>();
@@ -60,73 +40,13 @@ const Login = () => {
   const handleLogin = (): void => {
     setLoading(true);
 
-    if (!loginRef.current!.value) {
-      toast.error('É obrigatório informar o login');
-      setLoading(false);
-
-      return;
-    }
-
-    if (!passwordRef.current!.value) {
-      toast.error('É obrigatório informar a senha');
-      setLoading(false);
-
-      return;
-    }
-
-    dispatch(
-      signIn({
-        login: loginRef.current!.value,
-        password: passwordRef.current!.value
-      })
-    )
-      .unwrap()
-      .then(response => {
-        setLoading(false);
-        setAccessToken(response);
-      })
-      .catch(error => {
-        setLoading(false);
-        toast.error(`Ocorreu um erro ao se autenticar: ${error}`);
-      });
-  };
-
-  useEffect(() => {
-    if (accessToken) {
-      setLoading(true);
-
-      dispatch(
-        me({
-          accessToken: accessToken.token!
-        })
-      )
-        .unwrap()
-        .then(response => {
-          setLoading(false);
-          setUser(response);
-        })
-        .catch(error => {
-          setLoading(false);
-          toast.error(`Ocorreu um erro ao se autenticar: ${error}`);
-        });
-    }
-  }, [accessToken]);
-
-  useEffect(() => {
-    setLoading(true);
-
-    if (!accessToken || !user) {
-      setLoading(false);
-      return;
-    }
-
-    authContext.setAccessToken!(accessToken);
-    authContext.setUser!(user);
+    authContext.login({
+      login: loginRef.current?.value,
+      password: passwordRef.current?.value
+    });
 
     setLoading(false);
-
-    push('/home');
-  }, [user]);
+  };
 
   return (
     <Grid container>
@@ -166,7 +86,13 @@ const Login = () => {
       </Card>
 
       {loading && (
-        <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={loading}>
+        <Backdrop
+          open={loading}
+          sx={{
+            color: '#fff',
+            zIndex: theme => theme.zIndex.drawer + 1
+          }}
+        >
           <CircularProgress color='inherit' />
         </Backdrop>
       )}

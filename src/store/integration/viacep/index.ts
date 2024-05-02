@@ -7,7 +7,7 @@ import axios, { AxiosResponse } from 'axios';
 // ** TYPES
 import { TGet } from '@/types/api';
 
-export const viacep = createAsyncThunk('api/ViaCep', async (args: TGet, { rejectWithValue }) => {
+export const viacep = createAsyncThunk('api/ViaCep', async (args: TGet<string>, { rejectWithValue }) => {
   try {
     const url: string = `https://viacep.com.br/ws/${args.id}/json/`;
 

@@ -1,21 +1,21 @@
-export type TGet = {
-  id?: string;
-  accessToken: string;
+type TRequest = {
+  accessToken: string | undefined;
 };
 
-export type TPost<T> = {
+export type TGet<T> = TRequest & {
+  id?: T;
+};
+
+export type TPost<T> = TRequest & {
   data: T;
-  accessToken: string;
 };
 
-export type TPut<T> = {
+export type TPut<T> = TRequest & {
   data: T;
-  accessToken: string;
 };
 
-export type TDelete = {
-  id: number;
-  accessToken: string;
+export type TDelete<T> = TRequest & {
+  id: T;
 };
 
 export type TError = {

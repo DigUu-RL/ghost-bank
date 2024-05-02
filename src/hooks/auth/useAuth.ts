@@ -1,17 +1,17 @@
 // ** REACT
-import { useContext } from "react";
+import { useContext } from 'react';
 
 // ** CONTEXTS
-import { AuthContext } from "@/contexts/auth/AuthContext";
+import { AuthContext } from '@/contexts/auth/AuthContext';
 
 // ** TYPES
-import { TAuth, TAuthContext } from "@/types/contexts/auth";
+import { TAuth, TAuthContext } from '@/types/contexts/auth';
 
 export const useAuth = (): TAuth => {
-	const authContext: TAuthContext = useContext(AuthContext);
+  const authContext: TAuthContext = useContext(AuthContext);
 
-	return {
-		user: authContext.user,
-		accessToken: authContext.accessToken,
-	};
+  return {
+    user: authContext.user,
+    accessToken: authContext.accessToken
+  };
 };

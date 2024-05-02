@@ -1,27 +1,25 @@
 'use client';
 
 // ** REACT
-import { ReactNode } from "react";
-import { Provider } from "react-redux";
+import { ReactNode } from 'react';
+import { Provider } from 'react-redux';
 
 // ** CONTEXTS
-import { AuthProvider } from "./auth/AuthContext";
+import { AuthProvider } from './auth/AuthContext';
 
 // ** STORES
-import { store } from "../store";
+import { store } from '../store';
 
 interface IAppProviderProps {
-	children: ReactNode
+  children: ReactNode;
 }
 
 const AppProvider = ({ children }: IAppProviderProps) => {
-	return (
-		<Provider store={store}>
-			<AuthProvider>
-				{children}
-			</AuthProvider>
-		</Provider>
-	);
+  return (
+    <Provider store={store}>
+      <AuthProvider>{children}</AuthProvider>
+    </Provider>
+  );
 };
 
 export default AppProvider;
