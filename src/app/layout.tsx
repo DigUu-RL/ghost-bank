@@ -7,6 +7,7 @@ import { ReactElement } from 'react';
 // ** AUTO
 import { Inter } from 'next/font/google';
 import './globals.css';
+import Layout from '@/layout';
 
 const inter: NextFont = Inter({ subsets: ['latin'] });
 
@@ -17,7 +18,9 @@ interface RootLayoutProps {
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang='pt-br'>
-      <body className={inter.className}></body>
+      <body className={inter.className}>
+        <Layout>{children}</Layout>
+      </body>
     </html>
   );
 };

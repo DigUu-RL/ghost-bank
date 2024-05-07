@@ -1,3 +1,5 @@
+'use client';
+
 // ** MATERIAL UI
 import { createTheme, Grid, Theme, ThemeProvider } from '@mui/material';
 

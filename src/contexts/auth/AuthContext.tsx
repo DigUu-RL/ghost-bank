@@ -44,7 +44,10 @@ export const AuthProvider = ({ children }: IAuthProviderProps): JSX.Element => {
 
   // * handles
   const login = async (signIn: TSignIn): Promise<void> => {
-    const tokenResponse: AxiosResponse<TAccessToken, any> = await axios.post(`${apiUrl}/authentication/signin`, signIn);
+    const tokenResponse: AxiosResponse<TAccessToken, any> = await axios.post(
+      `${apiUrl}/authentication/sign-in`,
+      signIn
+    );
 
     const userResponse: AxiosResponse<TUser, any> = await axios.get(`${apiUrl}/authentication/me`, {
       headers: {
